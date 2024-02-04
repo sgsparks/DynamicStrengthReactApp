@@ -9,7 +9,7 @@ export const Home = ()=> {
 
 
   useEffect(() => {
-    const fetchBooks = async () => {
+    const fetchExercises = async () => {
         const baseUrl: string = "http://localhost:8080/api/v1/exercises";
 
         const url: string = `${baseUrl}?page=0&size=9`;
@@ -22,18 +22,17 @@ export const Home = ()=> {
 
         const responseJson = await response.json();
 
-        const responseData = responseJson._embedded.books;
 
         const loadeExercises: ExerciseModel[] = [];
 
-        for (const key in responseData) {
+        for (const key in responseJson) {
           loadeExercises.push({
-                exerciseName: responseData[key].id,
-                exerciseId: responseData[key].title,
-                instructions: responseData[key].author,
-                bodyPart: responseData[key].description,
-                target: responseData[key].copies,
-                secondary: responseData[key].copiesAvailable,
+                exerciseName: responseJson[key].exerciseName,
+                exerciseId: responseJson[key].exerciseId,
+                instructions: responseJson[key].instructions,
+                bodyPart: responseJson[key].bodyPart,
+                target: responseJson[key].target,
+                secondary: responseJson[key].secondary,
             });
         }
 
@@ -41,10 +40,12 @@ export const Home = ()=> {
         setIsLoading(false);
         console.log(exercises)
     };
-    fetchBooks().catch((error) => {
+    fetchExercises().catch((error) => {
         setIsLoading(false);
         setHttpError(error.message);
     })
+
+    console.log(exercises)
 }, []);
 
 if (isLoading) {
